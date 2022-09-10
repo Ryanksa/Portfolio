@@ -1,10 +1,13 @@
 <script>
+  import { onMount } from "svelte";
   import { spring } from "svelte/motion";
 
+  const HALF_PI = Math.PI / 2;
+
   const background = "url('/assets/koifish.png')";
-  const width = "172px";
-  const height = "115px";
-  const halfHeight = "57.5px";
+  const width = "129px";
+  const height = "87px";
+  const halfHeight = "43.5px";
 
   let pos = spring(
     { x: 0, y: 0 },
@@ -13,47 +16,50 @@
       damping: 0.3,
     }
   );
-  let prevPos = { x: 0, y: 0 };
-  $: dx = $pos.x - prevPos.x;
-  $: dy = $pos.y - prevPos.y;
-  $: theta = Math.atan2(dy, dx);
+  let theta = 0;
+  let flip = false;
 
   const handleMouseMove = (e) => {
-    prevPos.x = $pos.x;
-    prevPos.y = $pos.y;
+    const prevTheta = theta;
+    const dx = e.clientX - $pos.x;
+    const dy = e.clientY - $pos.y;
+    theta = Math.atan2(dy, dx);
     pos.set({ x: e.clientX, y: e.clientY });
+
+    if (prevTheta > HALF_PI && theta < -HALF_PI) flip = false;
+    else if (prevTheta < -HALF_PI && theta > HALF_PI) flip = true;
+    else if (theta >= prevTheta) flip = false;
+    else if (theta < prevTheta) flip = true;
   };
+
+  onMount(() => {
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  });
 </script>
 
-<div class="fish-container" on:mousemove={handleMouseMove}>
-  <div
-    class="fish"
-    style:background
-    style:--w={width}
-    style:--h={height}
-    style:--hh={halfHeight}
-    style:--x="{$pos.x}px"
-    style:--y="{$pos.y}px"
-    style:--r="{theta}rad"
-  />
-</div>
+<div
+  class="fish"
+  style:--bg={background}
+  style:--w={width}
+  style:--h={height}
+  style:--hh={halfHeight}
+  style:--x="{$pos.x}px"
+  style:--y="{$pos.y}px"
+  style:--r="{theta}rad"
+  style:--sy={flip ? -1 : 1}
+/>
 
 <style>
-  .fish-container {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-  }
-
   .fish {
     width: var(--w);
     height: var(--h);
+    background-image: var(--bg);
+    background-size: contain;
     position: absolute;
     left: calc(var(--x) - var(--w));
     top: calc(var(--y) - var(--hh));
-    transform: rotate(var(--r));
+    transform: rotate(var(--r)) scaleY(var(--sy));
     transform-origin: right;
   }
 </style>
