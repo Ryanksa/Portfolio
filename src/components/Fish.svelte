@@ -5,9 +5,9 @@
   const HALF_PI = Math.PI / 2;
 
   const background = "url('/assets/koifish.png')";
-  const width = "129px";
-  const height = "87px";
-  const halfHeight = "43.5px";
+  const width = "150px";
+  const height = "135px";
+  const halfHeight = "67.5px";
 
   let pos = spring(
     { x: 0, y: 0 },
