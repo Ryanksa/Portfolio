@@ -1,10 +1,11 @@
 <script>
   import { onMount } from "svelte";
   import { spring } from "svelte/motion";
+  import fish from "../assets/koifish.png";
 
   const HALF_PI = Math.PI / 2;
 
-  const background = "url('/assets/koifish.png')";
+  const background = `url(${fish})`;
   const width = "150px";
   const height = "135px";
   const halfHeight = "67.5px";
