@@ -62,5 +62,6 @@
     top: calc(var(--y) - var(--hh));
     transform: rotate(var(--r)) scaleY(var(--sy));
     transform-origin: right;
+    z-index: 100;
   }
 </style>
