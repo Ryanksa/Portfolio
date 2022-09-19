@@ -33,9 +33,31 @@
     else if (theta < prevTheta) flip = true;
   };
 
+  let ripple = {
+    playing: false,
+    pos: { x: 0, y: 0 },
+  };
+
   onMount(() => {
     window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    const playInterval = setInterval(() => {
+      ripple = {
+        playing: true,
+        pos: { x: $pos.x, y: $pos.y },
+      };
+    }, 3000);
+    const stopInterval = setInterval(() => {
+      ripple = {
+        ...ripple,
+        playing: false,
+      };
+    }, 6000);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      clearInterval(playInterval);
+      clearInterval(stopInterval);
+    };
   });
 </script>
 
@@ -50,6 +72,13 @@
   style:--r="{theta}rad"
   style:--sy={flip ? -1 : 1}
 />
+{#if ripple.playing}
+  <div
+    class="ripple"
+    style:left={`${ripple.pos.x}px`}
+    style:top={`${ripple.pos.y}px`}
+  />
+{/if}
 
 <style>
   .fish {
@@ -63,5 +92,38 @@
     transform: rotate(var(--r)) scaleY(var(--sy));
     transform-origin: right;
     z-index: 100;
+  }
+
+  .ripple {
+    position: absolute;
+    z-index: 99;
+    border-radius: 50%;
+    border: 1.5px solid rgb(252, 131, 25);
+    animation: ripple 900ms forwards;
+  }
+
+  .ripple::before {
+    content: "";
+    width: 30%;
+    height: 30%;
+    position: absolute;
+    left: 35%;
+    top: 35%;
+    border-radius: inherit;
+    border: inherit;
+  }
+
+  @keyframes ripple {
+    0% {
+      width: 0;
+      height: 0;
+      opacity: 1;
+    }
+    100% {
+      width: 60px;
+      height: 60px;
+      opacity: 0;
+      transform: translate(-30px, -30px);
+    }
   }
 </style>
