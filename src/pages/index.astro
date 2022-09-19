@@ -10,33 +10,34 @@ import linkedinIcon from "../assets/linkedin.png";
 
 <Layout title="Ryan Lin">
 		<Fish client:load />
-		<div class="flex flex-col md:flex-row w-screen h-screen overflow-scroll scrollbar-hidden py-8 px-4">
-			<div class="w-full min-h-full md:w-max m-auto flex flex-col justify-center gap-3">
-				<h2 class="name text-8xl">Ryan Lin</h2>
-				<Link
-					text="ryanlin58@gmail.com"
-					icon={emailIcon} 
-					url=""
-				/>
-				<Link
-					client:load
-					text="Github"
-					icon={githubIcon} 
-					url="https://github.com/Ryanksa"
-				/>
-				<Link
-					client:load
-					text="LinkedIn"
-					icon={linkedinIcon} 
-					url="https://linkedin.com/in/hungjenlin"
-				/>
+		<div class="flex flex-col gap-9 md:flex-row w-screen h-screen overflow-scroll scrollbar-hidden py-8 px-8">
+			<div class="md:w-1/2 m-auto flex flex-col justify-center items-center gap-3">
+				<div>
+					<h2 class="name text-8xl w-fit mb-4">Ryan Lin</h2>
+					<Link
+						text="ryanlin58@gmail.com"
+						icon={emailIcon} 
+						url=""
+					/>
+					<Link
+						client:load
+						text="Github"
+						icon={githubIcon} 
+						url="https://github.com/Ryanksa"
+					/>
+					<Link
+						client:load
+						text="LinkedIn"
+						icon={linkedinIcon} 
+						url="https://linkedin.com/in/hungjenlin"
+					/>
+				</div>
 			</div>
 			<div
-				class="min-h-full md:w-max m-auto flex flex-col items-center"
+				class="md:w-1/2 m-auto flex flex-col items-center"
 			>
-				<h2 class="name text-6xl mb-auto">Projects</h2>
-				<!-- Hardcoding 2 grid rows for smoother transition in -->
-				<div class="grid grid-cols-2 grid-rows-2 gap-4 mb-auto">
+				<h2 class="name text-6xl mb-8">Projects</h2>
+				<div class="grid grid-cols-2 grid-rows-2 gap-8 content-start min-h-[24rem]">
 					<Card
 						client:load
 						header="Oka"

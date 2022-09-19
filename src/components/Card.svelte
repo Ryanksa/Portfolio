@@ -52,7 +52,7 @@
 
 {#if !hidden}
   <div
-    class="max-w-sm flex flex-col justify-center items-center p-4 bg-slate-300/25 rounded-3xl relative overflow-hidden"
+    class="flex flex-col justify-center items-center p-4 bg-slate-300/25 rounded-3xl relative overflow-hidden"
     transition:fly={{ y: 300, duration: 900 }}
     on:mouseenter={handleMouseEnter}
     on:mouseleave={handleMouseLeave}
@@ -62,7 +62,9 @@
       style:height={`${$fill}%`}
     />
     <div class="text-2xl font-bold mb-2">{header}</div>
-    <div class="w-4/5 h-[3px] bg-indigo-400 rounded-xl" />
+    <div
+      class="w-4/5 h-[3px] bg-indigo-400 rounded-xl scale-x-0 animate-divider-expand"
+    />
     <div class="text-lg mt-2 p-2">{body}</div>
   </div>
 {/if}

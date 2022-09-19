@@ -74,7 +74,12 @@
 />
 {#if ripple.playing}
   <div
-    class="ripple"
+    class="ripple ripple-1"
+    style:left={`${ripple.pos.x}px`}
+    style:top={`${ripple.pos.y}px`}
+  />
+  <div
+    class="ripple ripple-2"
     style:left={`${ripple.pos.x}px`}
     style:top={`${ripple.pos.y}px`}
   />
@@ -99,18 +104,15 @@
     z-index: 99;
     border-radius: 50%;
     border: 1.5px solid rgb(252, 131, 25);
-    animation: ripple 900ms forwards;
+    opacity: 0;
   }
 
-  .ripple::before {
-    content: "";
-    width: 30%;
-    height: 30%;
-    position: absolute;
-    left: 35%;
-    top: 35%;
-    border-radius: inherit;
-    border: inherit;
+  .ripple-1 {
+    animation: ripple 600ms ease-out 0ms forwards;
+  }
+
+  .ripple-2 {
+    animation: ripple 600ms ease-out 300ms forwards;
   }
 
   @keyframes ripple {
