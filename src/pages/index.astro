@@ -10,7 +10,7 @@ import linkedinIcon from "../assets/linkedin.png";
 
 <Layout title="Ryan Lin">
 		<Fish client:load />
-		<div class="flex flex-col md:flex-row w-screen h-screen overflow-scroll scrollbar-hidden p-4">
+		<div class="flex flex-col md:flex-row w-screen h-screen overflow-scroll scrollbar-hidden py-8 px-4">
 			<div class="w-full min-h-full md:w-max m-auto flex flex-col justify-center gap-3">
 				<h2 class="name text-8xl">Ryan Lin</h2>
 				<Link
@@ -32,27 +32,31 @@ import linkedinIcon from "../assets/linkedin.png";
 				/>
 			</div>
 			<div
-				class="min-h-full md:w-max m-auto flex flex-col justify-center items-center"
+				class="min-h-full md:w-max m-auto flex flex-col items-center"
 			>
-				<h2 class="name text-6xl mb-4">Projects</h2>
-				<div class="grid grid-cols-2 gap-4">
+				<h2 class="name text-6xl mb-auto">Projects</h2>
+				<!-- Hardcoding 2 grid rows for smoother transition in -->
+				<div class="grid grid-cols-2 grid-rows-2 gap-4 mb-auto">
 					<Card
 						client:load
 						header="Oka"
 						body="An app for checking news, mapping out work, and taking breaks!"
 						url="https://okahome.vercel.app"
+						inDelay={0}
 					/>
 					<Card
 						client:load
 						header="MasQuerade"
 						body="Real-time chat app inspired by the game Persona 5."
 						url="https://masquerade.up.railway.app"
+						inDelay={300}
 					/>
 					<Card
 						client:load
 						header="Glob3D"
 						body="3D multi-user blogging app."
 						url="https://glob3d.tk/"
+						inDelay={600}
 					/>
 				</div>
 			</div>
