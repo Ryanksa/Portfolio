@@ -1,10 +1,60 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Fish from "../components/Fish.svelte";
-import AboutMe from "../components/AboutMe.svelte";
+import Link from "../components/Link.svelte";
+import Card from "../components/Card.svelte";
+import emailIcon from "../assets/email.png";
+import githubIcon from "../assets/github.png";
+import linkedinIcon from "../assets/linkedin.png";
 ---
 
 <Layout title="Ryan Lin">
 		<Fish client:load />
-		<AboutMe />
+		<div class="flex flex-col md:flex-row w-screen h-screen overflow-scroll scrollbar-hidden p-4">
+			<div class="w-full min-h-full md:w-max m-auto flex flex-col justify-center gap-3">
+				<h2 class="name text-8xl">Ryan Lin</h2>
+				<Link
+					text="ryanlin58@gmail.com"
+					icon={emailIcon} 
+					url=""
+				/>
+				<Link
+					client:load
+					text="Github"
+					icon={githubIcon} 
+					url="https://github.com/Ryanksa"
+				/>
+				<Link
+					client:load
+					text="LinkedIn"
+					icon={linkedinIcon} 
+					url="https://linkedin.com/in/hungjenlin"
+				/>
+			</div>
+			<div
+				class="min-h-full md:w-max m-auto flex flex-col justify-center items-center"
+			>
+				<h2 class="name text-6xl mb-4">Projects</h2>
+				<div class="grid grid-cols-2 gap-4">
+					<Card
+						client:load
+						header="Oka"
+						body="An app for checking news, mapping out work, and taking breaks!"
+						url="https://okahome.vercel.app"
+					/>
+					<Card
+						client:load
+						header="MasQuerade"
+						body="Real-time chat app inspired by the game Persona 5."
+						url="https://masquerade.up.railway.app"
+					/>
+					<Card
+						client:load
+						header="Glob3D"
+						body="3D multi-user blogging app."
+						url="https://glob3d.tk/"
+					/>
+				</div>
+			</div>
+		</div>
 </Layout>
