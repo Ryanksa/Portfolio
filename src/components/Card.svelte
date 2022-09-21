@@ -1,24 +1,18 @@
 <script>
+  import { spring } from "svelte/motion";
+  import { fly } from "svelte/transition";
+  import { onMount } from "svelte";
+
   export let header;
   export let body;
   export let url;
   export let inDelay;
 
-  import { spring } from "svelte/motion";
-  import { fly } from "svelte/transition";
-  import { onMount } from "svelte";
-
-  let hidden = true;
-  onMount(() => {
-    setTimeout(() => {
-      hidden = false;
-    }, inDelay);
-  });
-
   let fill = spring(0, {
     stiffness: 0.03,
     damping: 0.3,
   });
+  let hidden = true;
   let hovering;
   let unhovering;
 
@@ -48,6 +42,16 @@
         }, 100);
       }
     : null;
+
+  onMount(() => {
+    const timeout = setTimeout(() => {
+      hidden = false;
+    }, inDelay);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  });
 </script>
 
 {#if !hidden}

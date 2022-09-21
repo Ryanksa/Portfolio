@@ -4,11 +4,10 @@
   import fish from "../assets/koifish.png";
 
   const HALF_PI = Math.PI / 2;
-
-  const background = `url(${fish})`;
-  const width = "150px";
-  const height = "135px";
-  const halfHeight = "67.5px";
+  const BACKGROUND = `url(${fish})`;
+  const WIDTH = "150px";
+  const HEIGHT = "135px";
+  const HALF_HEIGHT = "67.5px";
 
   let pos = spring(
     { x: 0, y: 0 },
@@ -19,6 +18,10 @@
   );
   let theta = 0;
   let flip = false;
+  let ripple = {
+    playing: false,
+    pos: { x: 0, y: 0 },
+  };
 
   const handleMouseMove = (e) => {
     const prevTheta = theta;
@@ -31,11 +34,6 @@
     else if (prevTheta < -HALF_PI && theta > HALF_PI) flip = true;
     else if (theta >= prevTheta) flip = false;
     else if (theta < prevTheta) flip = true;
-  };
-
-  let ripple = {
-    playing: false,
-    pos: { x: 0, y: 0 },
   };
 
   onMount(() => {
@@ -63,10 +61,10 @@
 
 <div
   class="fish"
-  style:--bg={background}
-  style:--w={width}
-  style:--h={height}
-  style:--hh={halfHeight}
+  style:--bg={BACKGROUND}
+  style:--w={WIDTH}
+  style:--h={HEIGHT}
+  style:--hh={HALF_HEIGHT}
   style:--x="{$pos.x}px"
   style:--y="{$pos.y}px"
   style:--r="{theta}rad"
