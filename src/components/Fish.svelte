@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { onMount } from "svelte";
   import { spring } from "svelte/motion";
   import fish from "../assets/koifish.png";
@@ -23,7 +23,7 @@
     pos: { x: 0, y: 0 },
   };
 
-  const handleMouseMove = (e) => {
+  const handleMouseMove = (e: MouseEvent) => {
     const prevTheta = theta;
     const dx = e.clientX - $pos.x;
     const dy = e.clientY - $pos.y;

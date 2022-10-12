@@ -1,7 +1,7 @@
-<script>
-  export let text;
-  export let icon;
-  export let url;
+<script lang="ts">
+  export let text: string;
+  export let icon: string;
+  export let url: string;
 
   import { spring } from "svelte/motion";
 
@@ -9,8 +9,8 @@
     stiffness: 0.03,
     damping: 0.3,
   });
-  let hovering;
-  let unhovering;
+  let hovering: NodeJS.Timer;
+  let unhovering: NodeJS.Timer;
 
   const handleMouseEnter = url
     ? () => {

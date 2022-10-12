@@ -1,20 +1,20 @@
-<script>
+<script lang="ts">
   import { spring } from "svelte/motion";
   import { fly } from "svelte/transition";
   import { onMount } from "svelte";
 
-  export let header;
-  export let body;
-  export let url;
-  export let inDelay;
+  export let header: string;
+  export let body: string;
+  export let url: string = "";
+  export let inDelay: number;
 
   let fill = spring(0, {
     stiffness: 0.03,
     damping: 0.3,
   });
   let hidden = true;
-  let hovering;
-  let unhovering;
+  let hovering: NodeJS.Timer;
+  let unhovering: NodeJS.Timer;
 
   const handleMouseEnter = url
     ? () => {
