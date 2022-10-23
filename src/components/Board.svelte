@@ -1,4 +1,11 @@
-<div class="w-screen h-screen p-8 flex items-center gap-12">
+<script lang="ts">
+  export let reversed: boolean = false;
+</script>
+
+<div
+  class="w-screen h-screen p-8 flex items-center gap-12"
+  style:flex-direction={reversed ? "row-reverse" : "row"}
+>
   <div class="w-1/2 grid place-items-center rounded-xl overflow-hidden">
     <slot name="preview" />
   </div>

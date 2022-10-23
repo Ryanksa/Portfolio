@@ -9,6 +9,10 @@ import githubIcon from "../assets/github.png";
 import linkedinIcon from "../assets/linkedin.png";
 import okaIcon from "../assets/oka.png";
 import okaPreview from "../assets/oka-preview.png";
+import masqueradeIcon from "../assets/masquerade.png";
+import masqueradePreview from "../assets/masquerade-preview.png";
+import glob3dIcon from "../assets/glob3d.ico";
+import glob3dPreview from "../assets/glob3d-preview.png";
 ---
 
 <Layout title="Ryan Lin">
@@ -62,6 +66,70 @@ import okaPreview from "../assets/oka-preview.png";
 						text="View Code"
 						icon={githubIcon} 
 						url="https://github.com/Ryanksa/Oka"
+					/>
+				</div>
+			</div>
+		</Board>
+		<Board reversed={true}>
+			<Preview slot="preview" url={masqueradePreview} client:load />
+			<div slot="info" class="flex flex-col gap-6">
+				<h2 class="text-6xl">
+					Masquerade
+					<span class="block text-base text-gray-400">
+						Typescript&nbsp;&nbsp;|&nbsp;&nbsp;
+						Tailwind CSS&nbsp;&nbsp;|&nbsp;&nbsp;
+						Next.js&nbsp;&nbsp;|&nbsp;&nbsp;
+						Prisma&nbsp;&nbsp;|&nbsp;&nbsp;
+						PostgreSQL
+					</span>
+				</h2>
+				<p class="text-2xl">
+					Real-time chat app with design inspired by the game Persona 5.
+				</p>
+				<div class="flex flex-col gap-1">
+					<Link
+						client:load
+						text="Visit App"
+						icon={masqueradeIcon} 
+						url="https://masquerade.up.railway.app"
+					/>
+					<Link
+						client:load
+						text="View Code"
+						icon={githubIcon} 
+						url="https://github.com/Ryanksa/Masquerade"
+					/>
+				</div>
+			</div>
+		</Board>
+		<Board>
+			<Preview slot="preview" url={glob3dPreview} client:load />
+			<div slot="info" class="flex flex-col gap-6">
+				<h2 class="text-6xl">
+					Glob3D
+					<span class="block text-base text-gray-400">
+						Javascript&nbsp;&nbsp;|&nbsp;&nbsp;
+						Three.js w/ react-three-fiber&nbsp;&nbsp;|&nbsp;&nbsp;
+						WebSocket & WebRTC w/ Peer.js &nbsp;&nbsp;|&nbsp;&nbsp;
+						GraphQL&nbsp;&nbsp;|&nbsp;&nbsp;
+						MERN stack
+					</span>
+				</h2>
+				<p class="text-2xl">
+					3D, open-world, simultaneous multi-user blogging app!
+				</p>
+				<div class="flex flex-col gap-1">
+					<Link
+						client:load
+						text="Visit App"
+						icon={glob3dIcon} 
+						url="https://glob3d.tk"
+					/>
+					<Link
+						client:load
+						text="View Code"
+						icon={githubIcon} 
+						url="https://github.com/Ryanksa/Glob3D"
 					/>
 				</div>
 			</div>
