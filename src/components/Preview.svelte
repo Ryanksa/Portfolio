@@ -26,6 +26,9 @@
   });
 </script>
 
-<div bind:this={container} class="w-full max-w-[600px]">
+<div
+  bind:this={container}
+  class="w-full max-w-[600px] rounded-xl overflow-hidden"
+>
   <canvas bind:this={canvas} />
 </div>
