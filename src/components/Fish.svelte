@@ -89,7 +89,7 @@
     height: var(--h);
     background-image: var(--bg);
     background-size: contain;
-    position: absolute;
+    position: fixed;
     left: calc(var(--x) - var(--w));
     top: calc(var(--y) - var(--hh));
     transform: rotate(var(--r)) scaleY(var(--sy));
