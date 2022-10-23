@@ -29,8 +29,17 @@ export class Particle {
   }
 
   update() {
-    this.x += (this.vx *= this.friction) + (this.originX - this.x) * this.ease;
-    this.y += (this.vy *= this.friction) + (this.originY - this.y) * this.ease;
+    this.vx *= this.friction;
+    this.x += this.vx + (this.originX - this.x) * this.ease;
+    this.vy *= this.friction;
+    this.y += this.vy + (this.originY - this.y) * this.ease;
+  }
+
+  isRestored() {
+    return (
+      Math.abs(this.x - this.originX) < 0.1 &&
+      Math.abs(this.y - this.originY) < 0.1
+    );
   }
 }
 
@@ -45,7 +54,8 @@ export class ImageParticles {
     x: number;
     y: number;
   };
-  drawing: boolean;
+  hovering: boolean;
+  restored: boolean;
 
   constructor(image: HTMLImageElement, width: number, height: number) {
     this.image = image;
@@ -58,7 +68,8 @@ export class ImageParticles {
       x: 0,
       y: 0,
     };
-    this.drawing = false;
+    this.hovering = false;
+    this.restored = true;
   }
 
   init(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
@@ -85,10 +96,10 @@ export class ImageParticles {
       this.mouse.y = event.clientY - canvasRect.top;
     };
     const onMouseEnter = () => {
-      this.drawing = true;
+      this.hovering = true;
     };
     const onMouseLeave = () => {
-      this.drawing = false;
+      this.hovering = false;
     };
     canvas.addEventListener("mousemove", onMouseMove);
     canvas.addEventListener("mouseenter", onMouseEnter);
@@ -109,21 +120,27 @@ export class ImageParticles {
   }
 
   update() {
+    this.restored = true;
     for (const particle of this.particles) {
-      const dx = this.mouse.x - particle.x;
-      const dy = this.mouse.y - particle.y;
-      const distance = dx ** 2 + dy ** 2;
-      if (distance < this.mouse.radius ** 2) {
-        const angle = Math.atan2(dy, dx);
-        particle.vx = -this.mouse.radius * Math.cos(angle);
-        particle.vy = -this.mouse.radius * Math.sin(angle);
+      if (this.hovering) {
+        const dx = this.mouse.x - particle.x;
+        const dy = this.mouse.y - particle.y;
+        const distance = dx ** 2 + dy ** 2;
+        if (distance < this.mouse.radius ** 2) {
+          const angle = Math.atan2(dy, dx);
+          particle.vx = -this.mouse.radius * Math.cos(angle);
+          particle.vy = -this.mouse.radius * Math.sin(angle);
+        }
       }
       particle.update();
+      if (this.restored && !particle.isRestored()) {
+        this.restored = false;
+      }
     }
   }
 
   animate(ctx: CanvasRenderingContext2D) {
-    if (this.drawing) {
+    if (this.hovering || !this.restored) {
       ctx.clearRect(0, 0, this.width, this.height);
       this.update();
       this.draw(ctx);
