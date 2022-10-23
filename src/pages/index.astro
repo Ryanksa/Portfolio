@@ -4,6 +4,7 @@ import Fish from "../components/Fish.svelte";
 import Panel from '../components/Panel.svelte';
 import Link from "../components/Link.svelte";
 import Preview from '../components/Preview.svelte';
+import ScrollIndicator from '../components/ScrollIndicator.svelte';
 import emailIcon from "../assets/email.png";
 import githubIcon from "../assets/github.png";
 import linkedinIcon from "../assets/linkedin.png";
@@ -17,6 +18,7 @@ import glob3dPreview from "../assets/glob3d-preview.png";
 
 <Layout title="Ryan Lin">
 		<Fish client:load />
+		<ScrollIndicator client:load />
 		<Panel>
 			<div slot="content" class="h-full flex flex-col justify-center items-center">
 				<div>
