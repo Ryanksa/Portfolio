@@ -18,6 +18,7 @@
   );
   let theta = 0;
   let flip = false;
+  let scrollY = 0;
   let ripple = {
     playing: false,
     pos: { x: 0, y: 0 },

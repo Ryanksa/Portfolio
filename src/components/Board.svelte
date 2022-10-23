@@ -6,10 +6,12 @@
   class="w-screen h-screen p-8 flex items-center gap-12"
   style:flex-direction={reversed ? "row-reverse" : "row"}
 >
-  <div class="w-1/2 grid place-items-center rounded-xl overflow-hidden">
+  <div
+    class="hidden sm:w-1/2 sm:grid place-items-center rounded-xl overflow-hidden"
+  >
     <slot name="preview" />
   </div>
-  <div class="w-1/2 grid place-items-center">
+  <div class="w-full sm:w-1/2 grid place-items-center">
     <slot name="info" />
   </div>
 </div>

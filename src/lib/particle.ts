@@ -1,5 +1,4 @@
 export class Particle {
-  parent: ImageParticles;
   size: number;
   colour: string;
   x: number;
@@ -11,9 +10,8 @@ export class Particle {
   ease: number;
   friction: number;
 
-  constructor(parent: ImageParticles, x: number, y: number, colour: string) {
-    this.parent = parent;
-    this.size = parent.pixelSize;
+  constructor(x: number, y: number, size: number, colour: string) {
+    this.size = size;
     this.colour = colour;
     this.x = x;
     this.y = y;
@@ -31,16 +29,6 @@ export class Particle {
   }
 
   update() {
-    if (this.parent.mouse.x != null && this.parent.mouse.y != null) {
-      const dx = this.parent.mouse.x - this.x;
-      const dy = this.parent.mouse.y - this.y;
-      const distance = dx ** 2 + dy ** 2;
-      if (distance < this.parent.mouse.radius) {
-        const angle = Math.atan2(dy, dx);
-        this.vx = -this.parent.propelForce * Math.cos(angle);
-        this.vy = -this.parent.propelForce * Math.sin(angle);
-      }
-    }
     this.x += (this.vx *= this.friction) + (this.originX - this.x) * this.ease;
     this.y += (this.vy *= this.friction) + (this.originY - this.y) * this.ease;
   }
@@ -52,11 +40,10 @@ export class ImageParticles {
   height: number;
   particles: Particle[];
   pixelSize: number;
-  propelForce: number;
   mouse: {
     radius: number;
-    x?: number;
-    y?: number;
+    x: number;
+    y: number;
   };
   drawing: boolean;
 
@@ -66,11 +53,10 @@ export class ImageParticles {
     this.height = height;
     this.particles = [];
     this.pixelSize = 3;
-    this.propelForce = 30;
     this.mouse = {
-      radius: 900,
-      x: undefined,
-      y: undefined,
+      radius: 30,
+      x: 0,
+      y: 0,
     };
     this.drawing = false;
   }
@@ -87,7 +73,7 @@ export class ImageParticles {
         const a = pixels[index + 3];
         const colour = `rgba(${r},${g},${b},${a})`;
         if (a > 0) {
-          const particle = new Particle(this, x, y, colour);
+          const particle = new Particle(x, y, this.pixelSize, colour);
           this.particles.push(particle);
         }
       }
@@ -103,8 +89,6 @@ export class ImageParticles {
     };
     const onMouseLeave = () => {
       this.drawing = false;
-      this.mouse.x = undefined;
-      this.mouse.y = undefined;
     };
     canvas.addEventListener("mousemove", onMouseMove);
     canvas.addEventListener("mouseenter", onMouseEnter);
@@ -126,14 +110,22 @@ export class ImageParticles {
 
   update() {
     for (const particle of this.particles) {
+      const dx = this.mouse.x - particle.x;
+      const dy = this.mouse.y - particle.y;
+      const distance = dx ** 2 + dy ** 2;
+      if (distance < this.mouse.radius ** 2) {
+        const angle = Math.atan2(dy, dx);
+        particle.vx = -this.mouse.radius * Math.cos(angle);
+        particle.vy = -this.mouse.radius * Math.sin(angle);
+      }
       particle.update();
     }
   }
 
   animate(ctx: CanvasRenderingContext2D) {
     if (this.drawing) {
-      this.update();
       ctx.clearRect(0, 0, this.width, this.height);
+      this.update();
       this.draw(ctx);
     }
     requestAnimationFrame(() => this.animate(ctx));
