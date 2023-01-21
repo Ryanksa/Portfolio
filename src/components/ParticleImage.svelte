@@ -20,7 +20,8 @@
     const imageParticles = new ImageParticles(
       image,
       canvas.width,
-      canvas.height
+      canvas.height,
+      4
     );
     return imageParticles.init(canvas, ctx);
   });

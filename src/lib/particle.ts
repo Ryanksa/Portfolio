@@ -1,3 +1,7 @@
+const FRICTION = 0.75;
+const EASE = 0.6;
+const RADIUS = 30;
+
 export class Particle {
   size: number;
   colour: string;
@@ -7,8 +11,8 @@ export class Particle {
   originY: number;
   vx: number;
   vy: number;
-  ease: number;
   friction: number;
+  ease: number;
 
   constructor(x: number, y: number, size: number, colour: string) {
     this.size = size;
@@ -19,20 +23,29 @@ export class Particle {
     this.originY = y;
     this.vx = 0;
     this.vy = 0;
-    this.ease = 0.3;
-    this.friction = 0.6;
+    this.friction = FRICTION;
+    this.ease = EASE;
   }
 
   draw(ctx: CanvasRenderingContext2D) {
     ctx.fillStyle = this.colour;
-    ctx.fillRect(this.x, this.y, this.size, this.size);
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
+    ctx.fill();
   }
 
   update() {
     this.vx *= this.friction;
-    this.x += this.vx + (this.originX - this.x) * this.ease;
+    this.x += this.vx;
     this.vy *= this.friction;
-    this.y += this.vy + (this.originY - this.y) * this.ease;
+    this.y += this.vy;
+  }
+
+  restore() {
+    this.vx = 0;
+    this.vy = 0;
+    this.x += (this.originX - this.x) * this.ease;
+    this.y += (this.originY - this.y) * this.ease;
   }
 
   isRestored() {
@@ -57,14 +70,19 @@ export class ImageParticles {
   hovering: boolean;
   restored: boolean;
 
-  constructor(image: HTMLImageElement, width: number, height: number) {
+  constructor(
+    image: HTMLImageElement,
+    width: number,
+    height: number,
+    pixelSize: number
+  ) {
     this.image = image;
     this.width = width;
     this.height = height;
     this.particles = [];
-    this.pixelSize = 3;
+    this.pixelSize = pixelSize;
     this.mouse = {
-      radius: 30,
+      radius: RADIUS,
       x: 0,
       y: 0,
     };
@@ -90,16 +108,20 @@ export class ImageParticles {
       }
     }
 
+    let hoverTimeout: NodeJS.Timeout;
     const onMouseMove = (event: MouseEvent) => {
       const canvasRect = canvas.getBoundingClientRect();
       this.mouse.x = event.clientX - canvasRect.left;
       this.mouse.y = event.clientY - canvasRect.top;
     };
     const onMouseEnter = () => {
+      clearTimeout(hoverTimeout);
       this.hovering = true;
     };
     const onMouseLeave = () => {
-      this.hovering = false;
+      hoverTimeout = setTimeout(() => {
+        this.hovering = false;
+      }, 1000);
     };
     canvas.addEventListener("mousemove", onMouseMove);
     canvas.addEventListener("mouseenter", onMouseEnter);
@@ -110,6 +132,7 @@ export class ImageParticles {
       canvas.removeEventListener("mousemove", onMouseMove);
       canvas.removeEventListener("mouseenter", onMouseEnter);
       canvas.removeEventListener("mouseleave", onMouseLeave);
+      clearTimeout(hoverTimeout);
     };
   }
 
@@ -120,29 +143,38 @@ export class ImageParticles {
   }
 
   update() {
-    this.restored = true;
     for (const particle of this.particles) {
-      if (this.hovering) {
-        const dx = this.mouse.x - particle.x;
-        const dy = this.mouse.y - particle.y;
-        const distance = dx ** 2 + dy ** 2;
-        if (distance < this.mouse.radius ** 2) {
-          const angle = Math.atan2(dy, dx);
-          particle.vx = -this.mouse.radius * Math.cos(angle);
-          particle.vy = -this.mouse.radius * Math.sin(angle);
-        }
+      const dx = this.mouse.x - particle.x;
+      const dy = this.mouse.y - particle.y;
+      const distance = dx ** 2 + dy ** 2;
+      if (distance < this.mouse.radius ** 2) {
+        const angle = Math.atan2(dy, dx);
+        particle.vx = -this.mouse.radius * Math.cos(angle);
+        particle.vy = -this.mouse.radius * Math.sin(angle);
       }
       particle.update();
-      if (this.restored && !particle.isRestored()) {
+    }
+  }
+
+  restore() {
+    this.restored = true;
+    for (const particle of this.particles) {
+      particle.restore();
+      if (!particle.isRestored()) {
         this.restored = false;
       }
     }
   }
 
   animate(ctx: CanvasRenderingContext2D) {
-    if (this.hovering || !this.restored) {
+    if (this.hovering) {
       ctx.clearRect(0, 0, this.width, this.height);
       this.update();
+      this.draw(ctx);
+      this.restored = false;
+    } else if (!this.restored) {
+      ctx.clearRect(0, 0, this.width, this.height);
+      this.restore();
       this.draw(ctx);
     }
     requestAnimationFrame(() => this.animate(ctx));
