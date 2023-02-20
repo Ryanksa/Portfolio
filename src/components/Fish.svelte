@@ -95,7 +95,7 @@
   }
 
   .ripple {
-    position: absolute;
+    position: fixed;
     z-index: 99;
     border-radius: 50%;
     border: 1.5px solid rgb(252, 131, 25);
