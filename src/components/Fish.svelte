@@ -18,12 +18,9 @@
   );
   let theta = 0;
   let flip = false;
-  let ripple = {
-    playing: false,
-    pos: { x: 0, y: 0 },
-  };
+  let ripples: { id: string; x: number; y: number }[] = [];
 
-  const handleMouseMove = (e: MouseEvent) => {
+  const handleMove = (e: MouseEvent) => {
     const prevTheta = theta;
     const dx = e.clientX - $pos.x;
     const dy = e.clientY - $pos.y;
@@ -36,25 +33,25 @@
     else if (theta < prevTheta) flip = true;
   };
 
+  const handleClick = () => {
+    ripples.push({
+      id: `${$pos.x}-${$pos.y}`,
+      x: $pos.x,
+      y: $pos.y,
+    });
+    if (ripples.length >= 10) {
+      ripples = ripples.slice(-1);
+    }
+    ripples = ripples;
+  };
+
   onMount(() => {
-    window.addEventListener("mousemove", handleMouseMove);
-    const playInterval = setInterval(() => {
-      ripple = {
-        playing: true,
-        pos: { x: $pos.x, y: $pos.y },
-      };
-    }, 3000);
-    const stopInterval = setInterval(() => {
-      ripple = {
-        ...ripple,
-        playing: false,
-      };
-    }, 6000);
+    window.addEventListener("pointermove", handleMove);
+    window.addEventListener("pointerdown", handleClick);
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      clearInterval(playInterval);
-      clearInterval(stopInterval);
+      window.removeEventListener("pointermove", handleMove);
+      window.removeEventListener("pointerdown", handleClick);
     };
   });
 </script>
@@ -70,18 +67,18 @@
   style:--r="{theta}rad"
   style:--sy={flip ? -1 : 1}
 />
-{#if ripple.playing}
+{#each ripples as ripple (ripple.id)}
   <div
     class="ripple ripple-1"
-    style:left={`${ripple.pos.x}px`}
-    style:top={`${ripple.pos.y}px`}
+    style:left={`${ripple.x}px`}
+    style:top={`${ripple.y}px`}
   />
   <div
     class="ripple ripple-2"
-    style:left={`${ripple.pos.x}px`}
-    style:top={`${ripple.pos.y}px`}
+    style:left={`${ripple.x}px`}
+    style:top={`${ripple.y}px`}
   />
-{/if}
+{/each}
 
 <style>
   .fish {
