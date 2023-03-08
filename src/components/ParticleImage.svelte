@@ -2,8 +2,7 @@
   export let url: string;
 
   import { onMount } from "svelte";
-  import { ImageParticles } from "../lib/particle";
-  import { loadImage } from "../lib/image";
+  import { ImageParticles, loadImage } from "../lib/image";
 
   let container: HTMLDivElement;
   let canvas: HTMLCanvasElement;
@@ -21,7 +20,7 @@
       image,
       canvas.width,
       canvas.height,
-      4
+      6
     );
     return imageParticles.init(canvas, ctx);
   });
