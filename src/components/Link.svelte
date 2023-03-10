@@ -50,7 +50,7 @@
     style:width={`${$fill}%`}
   />
   {#if icon}
-    <img src={icon} alt="" class="w-6 h-6" />
+    <img src={icon} alt="" class="w-6 h-6" style:opacity={url ? 1 : 0.25} />
   {/if}
-  {text}
+  <span style:opacity={url ? 1 : 0.25}>{text}</span>
 </div>

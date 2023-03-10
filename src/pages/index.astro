@@ -61,7 +61,7 @@ import glob3dPreview from "../assets/glob3d-preview.png";
 			client:load
 			text="Visit App"
 			icon={okaIcon} 
-			url="https://okahome.vercel.app"
+			url={import.meta.env.OKA_URL}
 		/>
 		<Link
 			slot="code-link"
@@ -89,7 +89,7 @@ import glob3dPreview from "../assets/glob3d-preview.png";
 			client:load
 			text="Visit App"
 			icon={masqueradeIcon} 
-			url="https://masquerade.up.railway.app"
+			url={import.meta.env.MASQUERADE_URL}
 		/>
 		<Link
 			slot="code-link"
@@ -118,7 +118,7 @@ import glob3dPreview from "../assets/glob3d-preview.png";
 			client:load
 			text="Visit App"
 			icon={glob3dIcon} 
-			url="https://glob3d.tk"
+			url={import.meta.env.GLOB3D_URL}
 		/>
 		<Link
 			slot="code-link"
