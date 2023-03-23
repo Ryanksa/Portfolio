@@ -35,7 +35,7 @@
 
   const handleClick = () => {
     ripples.push({
-      id: `${$pos.x}-${$pos.y}`,
+      id: `${(Math.random() + 1).toString(36).substring(2)}`,
       x: $pos.x,
       y: $pos.y,
     });
