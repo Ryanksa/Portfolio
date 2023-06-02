@@ -1,37 +1,47 @@
 import { Particle } from "./particle";
 
-const RADIUS = 30;
+const MAX_PARTICLES = 9000;
 
 export class ImageParticles {
+  // Attributes
   image: HTMLImageElement;
   width: number;
   height: number;
-  particles: Particle[];
   pixelSize: number;
-  mouse: {
-    x: number;
-    y: number;
-  };
-  hovering: boolean;
-  restored: boolean;
+  radius: number;
+  radiusSq: number;
+  friction: number;
+  ease: number;
+  // Particles
+  particles: Particle[];
+  particlesInMotion: Particle[];
+  // Cached computations
+  wScaled: number;
+  hScaled: number;
+  rScaled: number;
 
   constructor(
     image: HTMLImageElement,
     width: number,
     height: number,
-    pixelSize: number
+    pixelSize: number,
+    radius: number,
+    friction: number,
+    ease: number
   ) {
     this.image = image;
     this.width = width;
     this.height = height;
-    this.particles = [];
     this.pixelSize = pixelSize;
-    this.mouse = {
-      x: 0,
-      y: 0,
-    };
-    this.hovering = false;
-    this.restored = true;
+    this.radius = radius;
+    this.radiusSq = radius ** 2;
+    this.friction = friction;
+    this.ease = ease;
+    this.particles = [];
+    this.particlesInMotion = [];
+    this.wScaled = Math.round(this.width / this.pixelSize);
+    this.hScaled = Math.round(this.height / this.pixelSize);
+    this.rScaled = Math.round(this.radius / this.pixelSize);
   }
 
   init(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
@@ -46,85 +56,73 @@ export class ImageParticles {
         const a = pixels[index + 3];
         const colour = `rgba(${r},${g},${b},${a})`;
         if (a > 0) {
-          const particle = new Particle(x, y, this.pixelSize, colour);
+          const particle = new Particle(
+            x,
+            y,
+            this.pixelSize,
+            colour,
+            this.friction,
+            this.ease
+          );
           this.particles.push(particle);
         }
       }
     }
 
-    let hoverTimeout: NodeJS.Timeout;
     const onMouseMove = (event: MouseEvent) => {
       const canvasRect = canvas.getBoundingClientRect();
-      this.mouse.x = event.clientX - canvasRect.left;
-      this.mouse.y = event.clientY - canvasRect.top;
-    };
-    const onMouseEnter = () => {
-      clearTimeout(hoverTimeout);
-      this.hovering = true;
-    };
-    const onMouseLeave = () => {
-      hoverTimeout = setTimeout(() => {
-        this.hovering = false;
-      }, 1000);
+      const mouseX = event.clientX - canvasRect.left;
+      const mouseY = event.clientY - canvasRect.top;
+      this.update(mouseX, mouseY);
+      this.draw(ctx);
     };
     canvas.addEventListener("mousemove", onMouseMove);
-    canvas.addEventListener("mouseenter", onMouseEnter);
-    canvas.addEventListener("mouseleave", onMouseLeave);
-    this.animate(ctx);
 
     return () => {
       canvas.removeEventListener("mousemove", onMouseMove);
-      canvas.removeEventListener("mouseenter", onMouseEnter);
-      canvas.removeEventListener("mouseleave", onMouseLeave);
-      clearTimeout(hoverTimeout);
     };
   }
 
   draw(ctx: CanvasRenderingContext2D) {
-    for (const particle of this.particles) {
+    ctx.clearRect(0, 0, this.width, this.height);
+    ctx.drawImage(this.image, 0, 0, this.width, this.height);
+    for (const particle of this.particlesInMotion) {
       particle.draw(ctx);
     }
   }
 
-  update() {
-    for (const particle of this.particles) {
-      const dx = this.mouse.x - particle.x;
-      const dy = this.mouse.y - particle.y;
-      const distance = dx ** 2 + dy ** 2;
-      if (distance < RADIUS ** 2) {
-        const angle = Math.atan2(dy, dx);
-        particle.vx = -RADIUS * Math.cos(angle);
-        particle.vy = -RADIUS * Math.sin(angle);
-      }
-      particle.update();
-    }
-  }
+  update(mouseX: number, mouseY: number) {
+    const x = Math.round(mouseX / this.pixelSize);
+    const xStart = Math.max(x - this.rScaled, 0);
+    const xEnd = Math.min(x + this.rScaled, this.wScaled);
 
-  restore() {
-    this.restored = true;
-    for (const particle of this.particles) {
-      particle.restore();
-      if (!particle.isRestored()) {
-        this.restored = false;
-      }
-    }
-  }
+    const y = Math.round(mouseY / this.pixelSize);
+    const yStart = Math.max(y - this.rScaled, 0);
+    const yEnd = Math.min(y + this.rScaled, this.hScaled);
 
-  animate(ctx: CanvasRenderingContext2D) {
-    if (this.hovering) {
-      ctx.clearRect(0, 0, this.width, this.height);
-      this.update();
-      this.draw(ctx);
-      this.restored = false;
-    } else if (!this.restored) {
-      ctx.clearRect(0, 0, this.width, this.height);
-      this.restore();
-      this.draw(ctx);
-      if (this.restored) {
-        ctx.drawImage(this.image, 0, 0, this.width, this.height);
+    for (let i = yStart; i < yEnd; i++) {
+      const row = i * this.wScaled;
+      for (let j = xStart; j < xEnd; j++) {
+        const particle = this.particles[row + j];
+        if (!particle.isInMotion()) {
+          this.particlesInMotion.push(particle);
+        }
       }
     }
-    requestAnimationFrame(() => this.animate(ctx));
+
+    const particlesInMotion: Particle[] = [];
+    for (let i = this.particlesInMotion.length - 1; i >= 0; i--) {
+      const particle = this.particlesInMotion[i];
+      particle.updateVelocity(mouseX, mouseY, this.radius, this.radiusSq);
+      particle.updatePosition();
+      if (particle.isInMotion()) {
+        particlesInMotion.push(particle);
+        if (particlesInMotion.length >= MAX_PARTICLES) {
+          break;
+        }
+      }
+    }
+    this.particlesInMotion = particlesInMotion;
   }
 }
 

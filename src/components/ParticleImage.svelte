@@ -4,6 +4,11 @@
   import { onMount } from "svelte";
   import { ImageParticles, loadImage } from "../lib/image";
 
+  const PIXEL_SIZE = 1;
+  const RADIUS = 30;
+  const FRICTION = 0.75;
+  const EASE = 0.45;
+
   let container: HTMLDivElement;
   let canvas: HTMLCanvasElement;
 
@@ -20,15 +25,15 @@
       image,
       canvas.width,
       canvas.height,
-      6
+      PIXEL_SIZE,
+      RADIUS,
+      FRICTION,
+      EASE
     );
     return imageParticles.init(canvas, ctx);
   });
 </script>
 
-<div
-  bind:this={container}
-  class="w-full max-w-[600px] rounded-xl overflow-hidden"
->
+<div bind:this={container} class="w-full rounded-xl overflow-hidden">
   <canvas bind:this={canvas} />
 </div>

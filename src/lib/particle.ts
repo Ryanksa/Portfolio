@@ -1,5 +1,5 @@
-const FRICTION = 0.75;
-const EASE = 0.6;
+const ORIGIN_THRESHOLD = 0.1;
+const MOTION_THRESHOLD = 0.1;
 
 export class Particle {
   size: number;
@@ -13,7 +13,14 @@ export class Particle {
   friction: number;
   ease: number;
 
-  constructor(x: number, y: number, size: number, colour: string) {
+  constructor(
+    x: number,
+    y: number,
+    size: number,
+    colour: string,
+    friction: number,
+    ease: number
+  ) {
     this.size = size;
     this.colour = colour;
     this.x = x;
@@ -22,8 +29,8 @@ export class Particle {
     this.originY = y;
     this.vx = 0;
     this.vy = 0;
-    this.friction = FRICTION;
-    this.ease = EASE;
+    this.friction = friction;
+    this.ease = ease;
   }
 
   draw(ctx: CanvasRenderingContext2D) {
@@ -33,24 +40,35 @@ export class Particle {
     ctx.fill();
   }
 
-  update() {
+  updateVelocity(
+    mouseX: number,
+    mouseY: number,
+    radius: number,
+    radiusSq: number
+  ) {
+    const dx = mouseX - this.x;
+    const dy = mouseY - this.y;
+    const distance = dx ** 2 + dy ** 2;
+    if (distance < radiusSq) {
+      const angle = Math.atan2(dy, dx);
+      this.vx = -radius * Math.cos(angle);
+      this.vy = -radius * Math.sin(angle);
+    }
+  }
+
+  updatePosition() {
     this.vx *= this.friction;
-    this.x += this.vx;
     this.vy *= this.friction;
-    this.y += this.vy;
+    this.x += this.vx + (this.originX - this.x) * this.ease;
+    this.y += this.vy + (this.originY - this.y) * this.ease;
   }
 
-  restore() {
-    this.vx = 0;
-    this.vy = 0;
-    this.x += (this.originX - this.x) * this.ease;
-    this.y += (this.originY - this.y) * this.ease;
-  }
-
-  isRestored() {
+  isInMotion() {
     return (
-      Math.abs(this.x - this.originX) < 0.1 &&
-      Math.abs(this.y - this.originY) < 0.1
+      (Math.abs(this.vx) > MOTION_THRESHOLD ||
+        Math.abs(this.vy) > MOTION_THRESHOLD) &&
+      Math.abs(this.x - this.originX) > ORIGIN_THRESHOLD &&
+      Math.abs(this.y - this.originY) > ORIGIN_THRESHOLD
     );
   }
 }
