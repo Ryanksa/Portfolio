@@ -1,6 +1,7 @@
 import { Particle } from "./particle";
+import { Arr } from "./array";
 
-const MAX_PARTICLES = 9000;
+const MAX_PARTICLES_IN_MOTION = 12000;
 
 export class ImageParticles {
   // Attributes
@@ -14,7 +15,8 @@ export class ImageParticles {
   ease: number;
   // Particles
   particles: Particle[];
-  particlesInMotion: Particle[];
+  particlesInMotion: Arr<Particle>;
+  pimSwap: Arr<Particle>;
   // Cached computations
   wScaled: number;
   hScaled: number;
@@ -38,7 +40,8 @@ export class ImageParticles {
     this.friction = friction;
     this.ease = ease;
     this.particles = [];
-    this.particlesInMotion = [];
+    this.particlesInMotion = new Arr(MAX_PARTICLES_IN_MOTION);
+    this.pimSwap = new Arr(MAX_PARTICLES_IN_MOTION);
     this.wScaled = Math.round(this.width / this.pixelSize);
     this.hScaled = Math.round(this.height / this.pixelSize);
     this.rScaled = Math.round(this.radius / this.pixelSize);
@@ -71,9 +74,10 @@ export class ImageParticles {
 
     const onMouseMove = (event: MouseEvent) => {
       const canvasRect = canvas.getBoundingClientRect();
-      const mouseX = event.clientX - canvasRect.left;
-      const mouseY = event.clientY - canvasRect.top;
-      this.update(mouseX, mouseY);
+      this.update(
+        event.clientX - canvasRect.left,
+        event.clientY - canvasRect.top
+      );
       this.draw(ctx);
     };
     canvas.addEventListener("mousemove", onMouseMove);
@@ -86,8 +90,8 @@ export class ImageParticles {
   draw(ctx: CanvasRenderingContext2D) {
     ctx.clearRect(0, 0, this.width, this.height);
     ctx.drawImage(this.image, 0, 0, this.width, this.height);
-    for (const particle of this.particlesInMotion) {
-      particle.draw(ctx);
+    for (let i = 0; i < this.particlesInMotion.length(); i++) {
+      this.particlesInMotion.at(i).draw(ctx);
     }
   }
 
@@ -110,19 +114,21 @@ export class ImageParticles {
       }
     }
 
-    const particlesInMotion: Particle[] = [];
-    for (let i = this.particlesInMotion.length - 1; i >= 0; i--) {
-      const particle = this.particlesInMotion[i];
+    this.pimSwap.empty();
+    for (let i = this.particlesInMotion.length() - 1; i >= 0; i--) {
+      const particle = this.particlesInMotion.at(i);
       particle.updateVelocity(mouseX, mouseY, this.radius, this.radiusSq);
       particle.updatePosition();
       if (particle.isInMotion()) {
-        particlesInMotion.push(particle);
-        if (particlesInMotion.length >= MAX_PARTICLES) {
+        this.pimSwap.push(particle);
+        if (this.pimSwap.length() >= MAX_PARTICLES_IN_MOTION) {
           break;
         }
       }
     }
-    this.particlesInMotion = particlesInMotion;
+    const temp = this.particlesInMotion;
+    this.particlesInMotion = this.pimSwap;
+    this.pimSwap = temp;
   }
 }
 
