@@ -7,7 +7,7 @@
 <Panel>
   <div
     slot="content"
-    class="h-full flex justify-center items-center gap-12 p-8"
+    class="h-full flex justify-center items-center gap-12"
     style:flex-direction={reversed ? "row-reverse" : "row"}
   >
     <div class="hidden sm:w-1/2 sm:grid place-items-center">
@@ -15,7 +15,7 @@
     </div>
     <div class="w-full sm:w-1/2 grid place-items-center">
       <div class="flex flex-col gap-6">
-        <h2 class="text-6xl">
+        <h2 class="text-4xl sm:text-6xl">
           <slot name="name" />
           <span class="block text-base text-gray-400">
             <slot name="technologies" />

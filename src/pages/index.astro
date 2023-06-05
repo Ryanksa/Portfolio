@@ -20,112 +20,114 @@ import glob3dPreview from "../assets/glob3d-preview.png";
 <Layout title="Ryan Lin">
 	<Fish client:load />
 	<ScrollIndicator client:load />
-	<Panel>
-		<div slot="content" class="h-full flex flex-col justify-center items-center">
-			<div>
-				<h2 class="name text-8xl w-fit mb-4">Ryan Lin</h2>
-				<Link
-					text="ryanlin58@gmail.com"
-					icon={emailIcon} 
-					url="#"
-				/>
-				<Link
-					client:load
-					text="Github"
-					icon={githubIcon} 
-					url="https://github.com/Ryanksa"
-				/>
-				<Link
-					client:load
-					text="LinkedIn"
-					icon={linkedinIcon} 
-					url="https://linkedin.com/in/hungjenlin"
-				/>
+	<div class="w-full h-full overflow-x-hidden overflow-y-scroll scrollbar-hidden snap-y snap-mandatory">
+		<Panel>
+			<div slot="content" class="h-full flex flex-col justify-center items-center">
+				<div>
+					<h2 class="name text-8xl w-fit mb-4">Ryan Lin</h2>
+					<Link
+						text="ryanlin58@gmail.com"
+						icon={emailIcon} 
+						url="#"
+					/>
+					<Link
+						client:load
+						text="Github"
+						icon={githubIcon} 
+						url="https://github.com/Ryanksa"
+					/>
+					<Link
+						client:load
+						text="LinkedIn"
+						icon={linkedinIcon} 
+						url="https://linkedin.com/in/hungjenlin"
+					/>
+				</div>
 			</div>
-		</div>
-	</Panel>
-	<ProjectPanel>
-		<ParticleImage slot="preview" url={okaPreview} client:load />
-		<span slot="name">Oka</span>
-		<span slot="technologies">
-			Typescript&nbsp;&nbsp;|&nbsp;&nbsp;
-			SCSS&nbsp;&nbsp;|&nbsp;&nbsp;
-			Next.js&nbsp;&nbsp;|&nbsp;&nbsp;
-			Firebase
-		</span>
-		<span slot="description">
-			An app for checking news, mapping out work, and taking breaks!
-		</span>
-		<Link
-			slot="project-link"
-			client:load
-			text="Visit App"
-			icon={okaIcon} 
-			url={import.meta.env.OKA_URL}
-		/>
-		<Link
-			slot="code-link"
-			client:load
-			text="View Code"
-			icon={githubIcon} 
-			url="https://github.com/Ryanksa/Oka"
-		/>
-	</ProjectPanel>
-	<ProjectPanel reversed={true}>
-		<ParticleImage slot="preview" url={masqueradePreview} client:load />
-		<span slot="name">MasQuerade</span>
-		<span slot="technologies">
-			Typescript&nbsp;&nbsp;|&nbsp;&nbsp;
-			Tailwind CSS&nbsp;&nbsp;|&nbsp;&nbsp;
-			Next.js&nbsp;&nbsp;|&nbsp;&nbsp;
-			Prisma&nbsp;&nbsp;|&nbsp;&nbsp;
-			PostgreSQL
-		</span>
-		<span slot="description">
-			Real-time chat app with design inspired by the game Persona 5.
-		</span>
-		<Link
-			slot="project-link"
-			client:load
-			text="Visit App"
-			icon={masqueradeIcon} 
-			url={import.meta.env.MASQUERADE_URL}
-		/>
-		<Link
-			slot="code-link"
-			client:load
-			text="View Code"
-			icon={githubIcon} 
-			url="https://github.com/Ryanksa/Masquerade"
-		/>
-	</ProjectPanel>
-	<ProjectPanel>
-		<ParticleImage slot="preview" url={glob3dPreview} client:load />
-		<span slot="name">Glob3D</span>
-		<span slot="technologies">
-			Javascript&nbsp;&nbsp;|&nbsp;&nbsp;
-			Three.js w/ react-three-fiber&nbsp;&nbsp;|&nbsp;&nbsp;
-			WebRTC w/ Peer.js&nbsp;&nbsp;|&nbsp;&nbsp;
-			WebSocket&nbsp;&nbsp;|&nbsp;&nbsp;
-			GraphQL&nbsp;&nbsp;|&nbsp;&nbsp;
-			MERN
-		</span>
-		<span slot="description">
-			3D, open-world, simultaneous multi-user blogging app!
-		</span>
-		<Link
-			slot="project-link"
-			client:load
-			text="Visit App"
-			icon={glob3dIcon} 
-			url={import.meta.env.GLOB3D_URL}
-		/>
-		<Link
-			slot="code-link"
-			client:load
-			text="View Code"
-			icon={githubIcon} 
-			url="https://github.com/Ryanksa/Glob3D"
-		/>
-	</ProjectPanel>
+		</Panel>
+		<ProjectPanel>
+			<ParticleImage slot="preview" url={okaPreview} client:load />
+			<span slot="name">Oka</span>
+			<span slot="technologies">
+				Typescript&nbsp;&nbsp;|&nbsp;&nbsp;
+				SCSS&nbsp;&nbsp;|&nbsp;&nbsp;
+				Next.js&nbsp;&nbsp;|&nbsp;&nbsp;
+				Firebase
+			</span>
+			<span slot="description">
+				An app for checking news, mapping out work, and taking breaks!
+			</span>
+			<Link
+				slot="project-link"
+				client:load
+				text="Visit App"
+				icon={okaIcon} 
+				url={import.meta.env.OKA_URL}
+			/>
+			<Link
+				slot="code-link"
+				client:load
+				text="View Code"
+				icon={githubIcon} 
+				url="https://github.com/Ryanksa/Oka"
+			/>
+		</ProjectPanel>
+		<ProjectPanel reversed={true}>
+			<ParticleImage slot="preview" url={masqueradePreview} client:load />
+			<span slot="name">MasQuerade</span>
+			<span slot="technologies">
+				Typescript&nbsp;&nbsp;|&nbsp;&nbsp;
+				Tailwind CSS&nbsp;&nbsp;|&nbsp;&nbsp;
+				Next.js&nbsp;&nbsp;|&nbsp;&nbsp;
+				Prisma&nbsp;&nbsp;|&nbsp;&nbsp;
+				PostgreSQL
+			</span>
+			<span slot="description">
+				Real-time chat app with design inspired by the game Persona 5.
+			</span>
+			<Link
+				slot="project-link"
+				client:load
+				text="Visit App"
+				icon={masqueradeIcon} 
+				url={import.meta.env.MASQUERADE_URL}
+			/>
+			<Link
+				slot="code-link"
+				client:load
+				text="View Code"
+				icon={githubIcon} 
+				url="https://github.com/Ryanksa/Masquerade"
+			/>
+		</ProjectPanel>
+		<ProjectPanel>
+			<ParticleImage slot="preview" url={glob3dPreview} client:load />
+			<span slot="name">Glob3D</span>
+			<span slot="technologies">
+				Javascript&nbsp;&nbsp;|&nbsp;&nbsp;
+				Three.js w/ react-three-fiber&nbsp;&nbsp;|&nbsp;&nbsp;
+				WebRTC w/ Peer.js&nbsp;&nbsp;|&nbsp;&nbsp;
+				WebSocket&nbsp;&nbsp;|&nbsp;&nbsp;
+				GraphQL&nbsp;&nbsp;|&nbsp;&nbsp;
+				MERN
+			</span>
+			<span slot="description">
+				3D, open-world, simultaneous multi-user blogging app!
+			</span>
+			<Link
+				slot="project-link"
+				client:load
+				text="Visit App"
+				icon={glob3dIcon} 
+				url={import.meta.env.GLOB3D_URL}
+			/>
+			<Link
+				slot="code-link"
+				client:load
+				text="View Code"
+				icon={githubIcon} 
+				url="https://github.com/Ryanksa/Glob3D"
+			/>
+		</ProjectPanel>
+	</div>
 </Layout>
