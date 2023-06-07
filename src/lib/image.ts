@@ -10,7 +10,6 @@ export class ImageParticles {
   height: number;
   pixelSize: number;
   radius: number;
-  radiusSq: number;
   friction: number;
   ease: number;
   // Particles
@@ -18,13 +17,12 @@ export class ImageParticles {
   particlesInMotion: Arr<Particle>;
   pimSwap: Arr<Particle>;
   // States
-  mouseX: number;
-  mouseY: number;
   hovering: boolean;
   // Cached computations
   wScaled: number;
   hScaled: number;
   rScaled: number;
+  rSquared: number;
 
   constructor(
     image: HTMLImageElement,
@@ -40,18 +38,16 @@ export class ImageParticles {
     this.height = height;
     this.pixelSize = pixelSize;
     this.radius = radius;
-    this.radiusSq = radius ** 2;
     this.friction = friction;
     this.ease = ease;
     this.particles = [];
     this.particlesInMotion = new Arr(MAX_PARTICLES_IN_MOTION);
     this.pimSwap = new Arr(MAX_PARTICLES_IN_MOTION);
-    this.mouseX = -radius;
-    this.mouseY = -radius;
     this.hovering = false;
     this.wScaled = Math.round(this.width / this.pixelSize);
     this.hScaled = Math.round(this.height / this.pixelSize);
     this.rScaled = Math.round(this.radius / this.pixelSize);
+    this.rSquared = radius ** 2;
   }
 
   init(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
@@ -79,27 +75,28 @@ export class ImageParticles {
       }
     }
 
-    const onMouseEnter = () => {
-      this.hovering = true;
-      this.animate(ctx);
-    };
     const onMouseMove = (event: MouseEvent) => {
       const canvasRect = canvas.getBoundingClientRect();
-      this.mouseX = event.clientX - canvasRect.left;
-      this.mouseY = event.clientY - canvasRect.top;
+      this.update(
+        event.clientX - canvasRect.left,
+        event.clientY - canvasRect.top
+      );
+      this.draw(ctx);
+    };
+    const onMouseEnter = () => {
+      this.hovering = true;
     };
     const onMouseLeave = () => {
       this.hovering = false;
-      this.mouseX = -this.radius;
-      this.mouseY = -this.radius;
+      this.restore(ctx);
     };
-    canvas.addEventListener("mouseenter", onMouseEnter);
     canvas.addEventListener("mousemove", onMouseMove);
+    canvas.addEventListener("mouseenter", onMouseEnter);
     canvas.addEventListener("mouseleave", onMouseLeave);
 
     return () => {
-      canvas.removeEventListener("mouseenter", onMouseEnter);
       canvas.removeEventListener("mousemove", onMouseMove);
+      canvas.removeEventListener("mouseenter", onMouseEnter);
       canvas.removeEventListener("mouseleave", onMouseLeave);
     };
   }
@@ -112,12 +109,12 @@ export class ImageParticles {
     }
   }
 
-  update() {
-    const x = Math.round(this.mouseX / this.pixelSize);
+  update(mouseX: number, mouseY: number) {
+    const x = Math.round(mouseX / this.pixelSize);
     const xStart = Math.max(x - this.rScaled, 0);
     const xEnd = Math.min(x + this.rScaled, this.wScaled);
 
-    const y = Math.round(this.mouseY / this.pixelSize);
+    const y = Math.round(mouseY / this.pixelSize);
     const yStart = Math.max(y - this.rScaled, 0);
     const yEnd = Math.min(y + this.rScaled, this.hScaled);
 
@@ -134,12 +131,7 @@ export class ImageParticles {
     this.pimSwap.empty();
     for (let i = this.particlesInMotion.length() - 1; i >= 0; i--) {
       const particle = this.particlesInMotion.at(i);
-      particle.updateVelocity(
-        this.mouseX,
-        this.mouseY,
-        this.radius,
-        this.radiusSq
-      );
+      particle.updateVelocity(mouseX, mouseY, this.radius, this.rSquared);
       particle.updatePosition();
       if (particle.isInMotion()) {
         this.pimSwap.push(particle);
@@ -153,15 +145,15 @@ export class ImageParticles {
     this.pimSwap = temp;
   }
 
-  animate(ctx: CanvasRenderingContext2D) {
-    const _animate = () => {
-      this.update();
+  restore(ctx: CanvasRenderingContext2D) {
+    const _restore = () => {
+      this.update(-this.radius, -this.radius);
       this.draw(ctx);
-      if (this.hovering || this.particlesInMotion.length() > 0) {
-        requestAnimationFrame(_animate);
+      if (!this.hovering && this.particlesInMotion.length() > 0) {
+        requestAnimationFrame(_restore);
       }
     };
-    _animate();
+    _restore();
   }
 }
 
