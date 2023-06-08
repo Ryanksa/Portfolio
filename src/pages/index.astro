@@ -5,7 +5,6 @@ import Panel from '../components/Panel.svelte';
 import ProjectPanel from '../components/ProjectPanel.svelte';
 import Link from "../components/Link.svelte";
 import ParticleImage from '../components/ParticleImage.svelte';
-import ScrollIndicator from '../components/ScrollIndicator.svelte';
 import emailIcon from "../assets/email.png";
 import githubIcon from "../assets/github.png";
 import linkedinIcon from "../assets/linkedin.png";
@@ -19,7 +18,6 @@ import glob3dPreview from "../assets/glob3d-preview.png";
 
 <Layout title="Ryan Lin">
 	<Fish client:load />
-	<ScrollIndicator client:load />
 	<div class="w-full h-full overflow-x-hidden overflow-y-scroll snap-y snap-mandatory">
 		<Panel>
 			<div slot="content" class="h-full flex flex-col justify-center items-center">
