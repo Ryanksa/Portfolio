@@ -1,6 +1,7 @@
 import { Particle } from "./particle";
 import { Arr } from "./array";
 
+const BYTE_RANGE = 255;
 const MAX_PARTICLES_IN_MOTION = 12000;
 
 export class ImageParticles {
@@ -59,7 +60,7 @@ export class ImageParticles {
         const r = pixels[index];
         const g = pixels[index + 1];
         const b = pixels[index + 2];
-        const a = pixels[index + 3];
+        const a = pixels[index + 3] / BYTE_RANGE;
         const colour = `rgba(${r},${g},${b},${a})`;
         if (a > 0) {
           const particle = new Particle(
