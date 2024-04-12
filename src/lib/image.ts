@@ -2,9 +2,9 @@ import { Particle } from "./particle";
 import { Arr } from "./array";
 
 const BYTE_RANGE = 255;
-const MAX_PARTICLES_IN_MOTION = 12000;
+const PIM_INIT_SIZE = 30000;
 
-export class ImageParticles {
+export class RipplingImage {
   // Attributes
   image: HTMLImageElement;
   width: number;
@@ -42,8 +42,8 @@ export class ImageParticles {
     this.friction = friction;
     this.ease = ease;
     this.particles = [];
-    this.particlesInMotion = new Arr(MAX_PARTICLES_IN_MOTION);
-    this.pimSwap = new Arr(MAX_PARTICLES_IN_MOTION);
+    this.particlesInMotion = new Arr(PIM_INIT_SIZE);
+    this.pimSwap = new Arr(PIM_INIT_SIZE);
     this.hovering = false;
     this.wScaled = Math.round(this.width / this.pixelSize);
     this.hScaled = Math.round(this.height / this.pixelSize);
@@ -76,15 +76,18 @@ export class ImageParticles {
       }
     }
 
+    let canvasRect: DOMRect;
     const onMouseMove = (event: MouseEvent) => {
-      const canvasRect = canvas.getBoundingClientRect();
-      this.update(
-        event.clientX - canvasRect.left,
-        event.clientY - canvasRect.top
-      );
-      this.draw(ctx);
+      setTimeout(() => {
+        this.ripple(
+          ctx,
+          event.clientX - canvasRect.left,
+          event.clientY - canvasRect.top
+        );
+      }, 300);
     };
     const onMouseEnter = () => {
+      canvasRect = canvas.getBoundingClientRect();
       this.hovering = true;
     };
     const onMouseLeave = () => {
@@ -136,14 +139,16 @@ export class ImageParticles {
       particle.updatePosition();
       if (particle.isInMotion()) {
         this.pimSwap.push(particle);
-        if (this.pimSwap.length() >= MAX_PARTICLES_IN_MOTION) {
-          break;
-        }
       }
     }
     const temp = this.particlesInMotion;
     this.particlesInMotion = this.pimSwap;
     this.pimSwap = temp;
+  }
+
+  ripple(ctx: CanvasRenderingContext2D, mouseX: number, mouseY: number) {
+    this.update(mouseX, mouseY);
+    this.draw(ctx);
   }
 
   restore(ctx: CanvasRenderingContext2D) {

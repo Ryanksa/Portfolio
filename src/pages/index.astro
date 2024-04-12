@@ -4,7 +4,7 @@ import Fish from "../components/Fish.svelte";
 import Panel from '../components/Panel.svelte';
 import ProjectPanel from '../components/ProjectPanel.svelte';
 import Link from "../components/Link.svelte";
-import ParticleImage from '../components/ParticleImage.svelte';
+import Image from '../components/Image.svelte';
 import emailIcon from "../assets/email.png";
 import githubIcon from "../assets/github.png";
 import linkedinIcon from "../assets/linkedin.png";
@@ -44,7 +44,7 @@ import glob3dPreview from "../assets/glob3d-preview.png";
 			</div>
 		</Panel>
 		<ProjectPanel>
-			<ParticleImage slot="preview" url={okaPreview} client:load />
+			<Image slot="preview" url={okaPreview} client:load />
 			<span slot="name">Oka</span>
 			<span slot="technologies">
 				Typescript&nbsp;&nbsp;|&nbsp;&nbsp;
@@ -71,7 +71,7 @@ import glob3dPreview from "../assets/glob3d-preview.png";
 			/>
 		</ProjectPanel>
 		<ProjectPanel reversed={true}>
-			<ParticleImage slot="preview" url={masqueradePreview} client:load />
+			<Image slot="preview" url={masqueradePreview} client:load />
 			<span slot="name">MasQuerade</span>
 			<span slot="technologies">
 				Typescript&nbsp;&nbsp;|&nbsp;&nbsp;
@@ -99,7 +99,7 @@ import glob3dPreview from "../assets/glob3d-preview.png";
 			/>
 		</ProjectPanel>
 		<ProjectPanel>
-			<ParticleImage slot="preview" url={glob3dPreview} client:load />
+			<Image slot="preview" url={glob3dPreview} client:load />
 			<span slot="name">Glob3D</span>
 			<span slot="technologies">
 				Javascript&nbsp;&nbsp;|&nbsp;&nbsp;

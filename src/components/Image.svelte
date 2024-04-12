@@ -2,7 +2,7 @@
   export let url: string;
 
   import { onMount } from "svelte";
-  import { ImageParticles, loadImage } from "../lib/image";
+  import { RipplingImage, loadImage } from "../lib/image";
 
   const PIXEL_SIZE = 1;
   const RADIUS = 30;
@@ -21,7 +21,7 @@
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const imageParticles = new ImageParticles(
+    const ripplingImage = new RipplingImage(
       image,
       canvas.width,
       canvas.height,
@@ -30,7 +30,7 @@
       FRICTION,
       EASE
     );
-    return imageParticles.init(canvas, ctx);
+    return ripplingImage.init(canvas, ctx);
   });
 </script>
 
